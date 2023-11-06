@@ -26,7 +26,7 @@ let john: Person = {
 }
 // john.name = 'John Doe';
 //Cannot assign to 'name' because it is a read-only property.
-console.log(john.favoriteNumber);
+// console.log(john.favoriteNumber);
 
 class PersonClass {
     name: string;
@@ -41,7 +41,7 @@ class PersonClass {
 }
 
 let johnClass = new PersonClass('John', 42);
-johnClass.sayHello();
+// johnClass.sayHello();
 
 class Employee extends PersonClass {
     salary: number;
@@ -59,11 +59,71 @@ class Employee extends PersonClass {
 }
 
 let cathy = new Employee('Cathy', 42, 100000);
-cathy.saySalary();
+// cathy.saySalary();
 
 let fibonacci: number[] = [1, 1, 2, 3, 5];
 interface NumberArray {
     [index: number]: number;
 }
 let fibonacci2: NumberArray = [1, 1, 2, 3, 5];
-console.log(fibonacci.indexOf(1));
+// console.log(fibonacci.indexOf(1));
+
+function sum(x: number, y: number): number {
+    return x + y;
+}
+console.log(sum(1, 2));
+let mySum = function (x: number, y: number): number {
+    return x + y;
+};
+// console.log(mySum(1, 3));
+interface SearchFunc {
+    (source: string, subString: string): boolean;
+}
+let mySearch: SearchFunc;
+mySearch = function (source: string, subString: string) {
+    return source.search(subString) !== -1;
+}
+// console.log(mySearch('abc', 'z'));
+// function buildName(firstName: string, lastName?: string) {
+//     if (lastName)
+//         return firstName + " " + lastName;
+//     else
+//         return firstName;
+// }
+function buildName(firstName: string = 'Tom', lastName: string = 'Cat') {
+    if (lastName)
+        return firstName + " " + lastName;
+    else
+        return firstName;
+}
+let result1 = buildName(undefined);
+let result2 = buildName("Bob", "Adams");
+// console.log(result1, result2);
+
+function push(array: any[], ...items: any[]){
+    items.forEach(function(item: any) {
+        array.push(item);
+    });
+}
+let a: number[] = [];
+push(a, 1, 2, 3);
+// console.log(a);
+function reverse(x: number): number;
+function reverse(x: string): string;
+function reverse(x: number | string): number | string {
+    if (typeof x === 'number') {
+        return Number(x.toString().split('').reverse().join(''));
+    } else if (typeof x === 'string') {
+        return x.split('').reverse().join('');
+    }
+}
+console.log(reverse(123),reverse('hello'));
+
+function getLength(something: string | number): number {
+    if ((<string>something).length) {
+        return (<string>something).length;
+    } else{
+        return something.toString().length;
+    }
+}
+console.log(getLength('hello'), getLength(123));
