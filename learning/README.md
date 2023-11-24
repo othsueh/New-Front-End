@@ -11,7 +11,7 @@
 
 > [!CAUTION]
 > If you use build function, it create Object type, not origin data type.
-> ```typescript
+> ```tsc
 > let createByNewString: string = new String('string');
 > //return Error
 > //Type 'String' is not assignable to type 'string'.
