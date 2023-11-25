@@ -91,22 +91,181 @@ seven = 'seven';
 > when you want to access attribtue or call method of union type variable, you can only use attribute or method wihch all variable's type have.
 
 ### Object type
-Before talk about object type, I think you should know what's classical OOP, not JS OOP, here is [ref1](#classic-oop)
+Before talk about object type, I think you should know what's classical OOP, not JS OOP, here is [ref1](#classic-oop).  
+Interface define all the rules, which means you can only implement justify things from rule, not less than rule.
+> [!NOTE]
+> But in class, you can define more things than rule!
+```typescript
+interface Person {
+    name: string;
+    age: number;
+}
+//justify
+let tom: Person = {
+    name: 'Tom',
+    age: 25,
+};
+//error
+let tom: Person = {
+    name: 'Tom'
+};
+//error
+let tom: Person = {
+    name: 'Tom',
+    age: 25,
+    gender: 'male'
+};
+```
+But sometimes we don't want the "justify", so we use choosable attribute.
+```typescript
+interface Person {
+    name: string;
+    age?: number;
+}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet risus non dui placerat egestas. Ut vitae sagittis sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu efficitur leo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi aliquet accumsan maximus. Cras magna mauris, interdum ut dolor vitae, tempus placerat arcu. Donec molestie ex id porttitor imperdiet. Nulla maximus elementum tincidunt. Vestibulum congue volutpat risus, luctus luctus eros tempor eu. Nam elit metus, malesuada a tortor at, varius fringilla mi. Maecenas molestie venenatis mauris, nec eleifend enim molestie vitae. Pellentesque vel vestibulum diam, id egestas odio.
+let tom: Person = {
+    name: 'Tom'
+};
+```
+And If we want more attributes than interface, we can use `class`.  
 
-Donec egestas eros nec purus auctor, id sagittis quam convallis. Nam dapibus posuere placerat. Donec lacinia pellentesque mauris, eget dignissim sem. Vestibulum mollis massa at euismod elementum. Curabitur a velit ut mauris porttitor faucibus a et lorem. Duis tristique odio non porta egestas. Suspendisse mi velit, pellentesque non volutpat ac, sodales porttitor augue.
+And there is one thing to be done, the `readonly` attribute, it can be only assign value when build the object.
+```typescript
+interface Person {
+    readonly id: number;
+    name: string;
+    age?: number;
+    [propName: string]: any;
+}
 
-Maecenas convallis, ante et semper mollis, metus ex gravida dui, rutrum malesuada enim sem vulputate enim. Duis tincidunt tempus pretium. In consectetur porta nunc, et ultrices ante euismod non. Donec finibus, elit vitae lacinia scelerisque, nisi purus convallis mi, aliquet pharetra sem nibh id tortor. Sed scelerisque at velit consequat pulvinar. Mauris quis volutpat lorem. Aliquam semper felis eu tortor gravida porttitor. Morbi diam mi, condimentum sit amet neque id, sollicitudin tempus libero. Donec pretium ipsum a pharetra dapibus.
+let tom: Person = {
+    id: 89757,
+    name: 'Tom',
+    gender: 'male'
+};
 
-In ultricies in ligula vel facilisis. Suspendisse potenti. Donec in tellus eu lacus pulvinar lacinia eu sed neque. Integer rhoncus, purus id ornare consectetur, enim sem mollis augue, ac feugiat turpis leo a dolor. Maecenas nec faucibus metus. Nullam non lacus vel lacus hendrerit interdum. Aliquam viverra commodo mi, et bibendum ligula dapibus ut. Fusce sit amet massa congue, iaculis arcu eu, faucibus ex. Donec ac leo ut massa tempus molestie vel non odio. Aenean vel tincidunt ex. Donec a iaculis mauris. Cras laoreet scelerisque pretium.
+tom.id = 9527;
+// error: Cannot assign to 'id' because it is a constant or a read-only property.
+```
+> [!NOTE]
+> When name a interface, we usually use capital 'I' to represent interface.
+```typescript
+interface IPerson {
+  [prop: string]: string;
+  name: string;
+  age: number;
+}
+```
+### Array Type
+The basic array type implement is simple, like below:
+```typescript
+let fibonacci: number[] = [1,1,2,3,5]
+```
+And you can also use [generic](#generic) to define this:
+```typescript
+let fibonacci: Array<number> = [1,1,2,3,5]
+```
+> [!CAUTION]
+> All the rules in original data type also need to be followed in array type.
 
-Maecenas fermentum, elit ut consequat tempor, nulla dolor tincidunt justo, vitae mollis purus ligula eu lacus. Nam nisi nunc, iaculis at iaculis ac, vehicula eu nisl. Donec enim metus, hendrerit quis vehicula vel, malesuada sed dui. Sed quam velit, fermentum in accumsan nec, maximus ac ante. Donec ligula orci, ornare nec tempor eu, consequat et orci. Proin sed accumsan nisl, tempus commodo nisi. Proin massa turpis, consequat eu odio vel, commodo interdum sem. Sed ac magna in leo fermentum tempus. Aenean erat tellus, vehicula in dui non, eleifend lacinia lectus. Nam mi erat, euismod maximus magna sit amet, suscipit dapibus nisl. Nunc mattis, nisi quis facilisis tincidunt, justo massa aliquet mauris, et facilisis urna erat vitae velit. Sed eget quam ultrices, tincidunt quam eu, consequat eros. Vestibulum quis nisl dictum, sodales nisi id, ornare risus. Duis nec eros eleifend, hendrerit lectus id, elementum enim. Quisque vulputate magna non hendrerit luctus.
+You can also use `any` in array type to store any types of data in one array.
+```typescript
+let list: any[] = ['xcatliu', 25, { website: 'http://xcatliu.com' }];
+```
+### Function type
+In JS we have function declaration and function expression, also in TS! If you forget what's the [difference](#expression-&-declaration)
 
+---
+## Expression & Declaration
+在 TypeScript（和 JavaScript）中，函數聲明（Function Declaration）和函數表達式（Function Expression）有幾個主要區別：
 
+1. **提升（Hoisting）**：
+   - 函數聲明會被提升，意味著你可以在聲明之前調用它。
+   - 函數表達式不會被提升，因此只能在定義之後使用。
+
+2. **匿名與命名**：
+   - 函數表達式可以是匿名的或命名的。
+   - 函數聲明則必須有一個名稱。
+
+3. **語法**：
+   - 函數聲明的語法類似於 `function functionName() {}`。
+   - 函數表達式的語法類似於 `const functionName = function() {}` 或使用箭頭函數 `const functionName = () => {}`。
+
+這些差異影響了函數如何在代碼中被組織和調用。
+---
+## Generic
+Generic is a useful tool, it makes your code more facile.  
+What Generic do is pass the type of variable as argument to functions or class, let them can handle different types of data.
+```typescript
+function identity<T>(arg: T): T {
+    return arg;
+}
+
+let output1 = identity<string>("myString");
+let output2 = identity<number>(100);
+```
 
 ## Classic OOP
-As an old JS user, I'm familiar with JS OOP, not Classical OOP. So it's time to learn it!  
-### Typical OOP
+As an old JS user, I'm familiar with JS OOP, not Classic OOP. So it's time to learn it!  
+### Classic OOP
+Classic OOP has three elements need to define.
+1. Interface: The rule of the blueprint, decide "What must be implement"(Such as attributes, methods), not "How to implement".
+2. Class: The blueprint, decide "How to implement", contains all the rule from interface.
+3. Implement:  Clearly define what's the attributes, what methods behave.
+```typescript
+interface IShape {
+  width: number;
+  height: number;
+  getArea(): number;
+}
 
+class Rectangle {
+    width: number;
+    height: number;
 
+    constructor(width: number, height: number) {
+        this.width = width;
+        this.height = height;
+    }
+
+    getArea(): number {
+        return this.width * this.height;
+    }
+}
+
+class Square extends Rectangle {
+    constructor(side: number) {
+        super(side, side);
+    }
+}
+
+const square = new Square(5);
+console.log(square.getArea()); // Outputs: 25
+```
+### JavaScript OOP
+JS OOP is not that clear to understand, since it lies on function and it's prototype to implement OOP.  
+Every function has its prototype, and prototype contains all attributes and methods can be build by the function.  
+Below shows how complex to implement oop in javascript:
+```javascript
+function Rectangle(width, height) {
+    this.width = width;
+    this.height = height;
+}
+
+Rectangle.prototype.getArea = function() {
+    return this.width * this.height;
+};
+
+function Square(side) {
+    Rectangle.call(this, side, side);
+}
+
+// Inheriting from Rectangle
+Square.prototype = Object.create(Rectangle.prototype);
+Square.prototype.constructor = Square;
+
+const square = new Square(5);
+console.log(square.getArea()); // Outputs: 25
+```
+### Conclusion
+Give up JS OOP, use TS instead!
