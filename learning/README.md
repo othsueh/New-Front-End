@@ -116,7 +116,7 @@ let tom: Person = {
     gender: 'male'
 };
 ```
-But sometimes we don't want the "justify", so we use choosable attribute.
+But sometimes we don't want the "justify", so we use optional attribute.
 ```typescript
 interface Person {
     name: string;
@@ -147,8 +147,8 @@ let tom: Person = {
 tom.id = 9527;
 // error: Cannot assign to 'id' because it is a constant or a read-only property.
 ```
-> [!NOTE]
-> When name a interface, we usually use capital 'I' to represent interface.
+> [!TIP]
+> When name a interface, we usually use capital **I** to represent interface.
 ```typescript
 interface IPerson {
   [prop: string]: string;
@@ -173,7 +173,97 @@ You can also use `any` in array type to store any types of data in one array.
 let list: any[] = ['xcatliu', 25, { website: 'http://xcatliu.com' }];
 ```
 ### Function type
-In JS we have function declaration and function expression, also in TS! If you forget what's the [difference](#expression--declaration)
+In JS we have function declaration and function expression, also in TS! If you forget what's the [difference](#expression--declaration)  
+#### Function Declaration
+```typescript
+function sum(x: number, y: number): number{
+    return x + y;
+}
+```
+> [!CAUTION]
+> It's not acceptable to give more or less arguments to function.
+
+#### Function Expression
+```typescript
+let mySum = function(x: number, y: number): number{
+    return x + y;
+}
+```
+which is equal to:
+```typescript
+let mySum: (x: number, y: number) => number = function(x: number, y: number): number{
+    return x + y;
+}
+```
+The first code doesn't define type when init, its type is come after assigning a value to it. wich is [type inference](#type-inference)
+Then second code can also be written in below form, which is more readable:
+```typescript
+interface INumberfunction {
+    (source1: number, source2: number): number;
+}
+let mySum: INumberfunction;
+mySum = function(x: number, y: number): number{
+    return x + y;
+}
+```
+> [!NOTE]
+> `=>` in TS is express the definition of function, not equal to arrow function in JS.
+
+#### Optional arguments
+To fix the problem of can't assign less argument, we have optional argument!
+```typescript
+function sum(x: number, y: number, z?: number): number {
+    return z ? x + y + z : x + y;
+    //prevent error of z is NaN
+} 
+```
+> [!CAUTION]
+> Optional arguments can only be placed after reequired arguments.
+#### Default arguments
+In JS ES6, we can set default arguments for function, so does TS!.
+```typescript
+function setName(firstName: string, lastName: string = "Lee"): string {
+    return `${firstName} ${lastName}`;
+}
+```
+It doesn't matter that put default arguments to put after or before required arguments.
+
+#### Rest arguments
+In JS ES6, we have `...rest` arguments that can be put after required arguments.  
+In TS, we treat `...rest` as an array.   
+```typescript
+function push(array: number[], ...items: number[]): number[] {
+    return [...array, ...items];
+}
+```
+#### Overloac function
+Support we have a function that support union type:
+```typescript
+function add(source1: number | string, source2: number | string): number | string {
+    if (typeof source1 === 'number' && typeof source2 === 'number') {
+        return source1 + source2;
+    } else if (typeof source1 === 'string' && typeof source2 === 'string') {
+        return source1.concat(source2);
+    }
+    throw new Error('Invalid argument types');
+}
+```
+How do we precisely define `number => number` and `string => string`?  
+We can use overload to achieve it!
+```typescript
+function add(source1: number, source2: number): number;
+function add(source1: string, source2: string): string;
+function add(source1: number | string, source2: number | string): number | string {
+    if (typeof source1 === 'number' && typeof source2 === 'number') {
+        return source1 + source2;
+    } else if (typeof source1 === 'string' && typeof source2 === 'string') {
+        return source1.concat(source2);
+    }
+    throw new Error('Invalid argument types');
+}
+```
+> [!TIP]
+> Since function will match from first function definition to last, it's better to put first definition in first part of the function.
 
 ---
 ## Expression & Declaration
@@ -192,6 +282,7 @@ In JS we have function declaration and function expression, also in TS! If you f
    - 函數表達式的語法類似於 `const functionName = function() {}` 或使用箭頭函數 `const functionName = () => {}`。
 
 這些差異影響了函數如何在代碼中被組織和調用。
+
 ---
 ## Generic
 Generic is a useful tool, it makes your code more facile.  
