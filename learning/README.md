@@ -173,7 +173,7 @@ You can also use `any` in array type to store any types of data in one array.
 let list: any[] = ['xcatliu', 25, { website: 'http://xcatliu.com' }];
 ```
 ### Function type
-In JS we have function declaration and function expression, also in TS! If you forget what's the [difference](#expression-&-declaration)
+In JS we have function declaration and function expression, also in TS! If you forget what's the [difference](#expression--declaration)
 
 ---
 ## Expression & Declaration
